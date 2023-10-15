@@ -1,4 +1,4 @@
-import { SWAP, REGERNATE_ARRAY, BUBBLE_SORT,HEAP_SORT,QUICK_SORT } from "./types";
+import { SWAP, REGERNATE_ARRAY, BUBBLE_SORT,HEAP_SORT,QUICK_SORT, MERGE_SORT } from "./types";
 
 export const regenerateArray = () => dispatch => {
     const size = document.getElementById("Size").value * 5
@@ -13,14 +13,37 @@ export const regenerateArray = () => dispatch => {
     })
     
 }
-export const swap = (array, i,j) => dispatch =>{
+export const swap = (array, i,j) => async(dispatch) =>{
+  let bars = document.getElementsByClassName('arrayIndex');
+  let delay = 1000 / (document.getElementById("Size").value * 5)
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          bars[i].style.backgroundColor = 'red';
+          bars[j].style.backgroundColor = 'red';
+          dispatch({
+            type: BUBBLE_SORT,
+            payload: [...array],
+          });
+          resolve(); // Resolve the Promise after changing the color
+        }, delay);
+      });
+
+
     //whenever want to send promise, send dispatch
         let temp = array[i]
         array[i] = array[j]
-        array[j] = temp 
-        dispatch({
-          type: SWAP,
-          payload: [...array],
+        array[j] = temp
+        
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            bars[i].style.backgroundColor = 'green';
+            bars[j].style.backgroundColor = 'green';
+            dispatch({
+              type: BUBBLE_SORT,
+              payload: [...array],
+            });
+            resolve(); // Resolve the Promise after changing the color
+          }, delay);
         });
 }
 
@@ -28,7 +51,7 @@ export const swap = (array, i,j) => dispatch =>{
 export const heapSort = (array) => async(dispatch) => {
   let index, swindex, val, n = array.length
   let bars = document.getElementsByClassName('arrayIndex');
-  let delay = 25; // Initial delay in milliseconds
+  let delay = 1000 / (document.getElementById("Size").value * 5)
   for(let i = 0; i < n; i++){
     index = i 
     val = array[index]
@@ -38,7 +61,7 @@ export const heapSort = (array) => async(dispatch) => {
       setTimeout(() => {
         bars[index].style.backgroundColor = 'green';
         dispatch({
-          type: BUBBLE_SORT,
+          type: HEAP_SORT,
           payload: [...array],
         });
         resolve(); // Resolve the Promise after changing the color
@@ -51,7 +74,7 @@ export const heapSort = (array) => async(dispatch) => {
         setTimeout(() => {
           bars[swindex].style.backgroundColor = 'green';
           dispatch({
-            type: BUBBLE_SORT,
+            type: HEAP_SORT,
             payload: [...array],
           });
           resolve(); // Resolve the Promise after changing the color
@@ -59,9 +82,9 @@ export const heapSort = (array) => async(dispatch) => {
       if(array[swindex] >= val){
         await new Promise((resolve) => {
           setTimeout(() => {
-            bars[index].style.backgroundColor = 'green';
+            bars[swindex].style.backgroundColor = 'lightblue';
             dispatch({
-              type: BUBBLE_SORT,
+              type: HEAP_SORT,
               payload: [...array],
             });
             resolve(); // Resolve the Promise after changing the color
@@ -74,21 +97,28 @@ export const heapSort = (array) => async(dispatch) => {
             bars[swindex].style.backgroundColor = 'red';
 
             dispatch({
-              type: BUBBLE_SORT,
+              type: HEAP_SORT,
               payload: [...array],
             });
             resolve(); // Resolve the Promise after changing the color
           }, delay);})
         array[index] = array[swindex] 
+
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            bars[index].style.backgroundColor = 'lightblue';
+            resolve(); // Resolve the Promise after changing the color
+          }, delay);})
+
         index = swindex
 
         await new Promise((resolve) => {
           setTimeout(() => {
-            bars[index].style.backgroundColor = 'green';
-            bars[swindex].style.backgroundColor = 'green';
+            bars[index].style.backgroundColor = 'lightblue';
+            bars[swindex].style.backgroundColor = 'lightblue';
 
             dispatch({
-              type: BUBBLE_SORT,
+              type: HEAP_SORT,
               payload: [...array],
             });
             resolve(); // Resolve the Promise after changing the color
@@ -97,6 +127,15 @@ export const heapSort = (array) => async(dispatch) => {
       }
     }
     array[index]=val
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        bars[index].style.backgroundColor = 'lightblue';
+        dispatch({
+          type: HEAP_SORT,
+          payload: [...array],
+        });
+        resolve(); // Resolve the Promise after changing the color
+      }, delay);})
   }
 
   for( let i = n - 1; i >= 0; i--){
@@ -105,7 +144,7 @@ export const heapSort = (array) => async(dispatch) => {
         bars[i].style.backgroundColor = 'red';
         bars[0].style.backgroundColor = 'red';
         dispatch({
-          type: BUBBLE_SORT,
+          type: HEAP_SORT,
           payload: [...array],
         });
         resolve(); // Resolve the Promise after changing the color
@@ -117,10 +156,10 @@ export const heapSort = (array) => async(dispatch) => {
 
     await new Promise((resolve) => {
       setTimeout(() => {
-        bars[i].style.backgroundColor = 'green';
-        bars[0].style.backgroundColor = 'green';
+        bars[i].style.backgroundColor = 'lightblue';
+        bars[0].style.backgroundColor = 'lightblue';
         dispatch({
-          type: BUBBLE_SORT,
+          type: HEAP_SORT,
           payload: [...array],
         });
         resolve(); // Resolve the Promise after changing the color
@@ -130,9 +169,10 @@ export const heapSort = (array) => async(dispatch) => {
       if((swindex+1<i-1) && (array[swindex] < array[swindex+1])){
         await new Promise((resolve) => {
           setTimeout(() => {
+            bars[swindex].style.backgroundColor = 'lightblue';
             bars[swindex+1].style.backgroundColor = 'green';
             dispatch({
-              type: BUBBLE_SORT,
+              type: HEAP_SORT,
               payload: [...array],
             });
             resolve(); // Resolve the Promise after changing the color
@@ -140,6 +180,13 @@ export const heapSort = (array) => async(dispatch) => {
         swindex++
       }
       if(swindex > i-1 || array[swindex] < val){
+        if(array[swindex] < val){
+          await new Promise((resolve) => {
+            setTimeout(() => {
+              bars[swindex].style.backgroundColor = 'lightblue';
+              resolve(); // Resolve the Promise after changing the color
+            }, delay);})
+        }
         break 
       }else{
         await new Promise((resolve) => {
@@ -147,12 +194,17 @@ export const heapSort = (array) => async(dispatch) => {
             bars[swindex].style.backgroundColor = 'red';
             bars[index].style.backgroundColor = 'red';
             dispatch({
-              type: BUBBLE_SORT,
+              type: HEAP_SORT,
               payload: [...array],
             });
             resolve(); // Resolve the Promise after changing the color
           }, delay);})
         array[index]=array[swindex]
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            bars[index].style.backgroundColor = 'lightblue';
+            resolve(); // Resolve the Promise after changing the color
+          }, delay);})
         index=swindex
 
         await new Promise((resolve) => {
@@ -160,7 +212,7 @@ export const heapSort = (array) => async(dispatch) => {
             bars[swindex].style.backgroundColor = 'green';
             bars[index].style.backgroundColor = 'green';
             dispatch({
-              type: BUBBLE_SORT,
+              type: HEAP_SORT,
               payload: [...array],
             });
             resolve(); // Resolve the Promise after changing the color
@@ -170,8 +222,9 @@ export const heapSort = (array) => async(dispatch) => {
     array[index]=val
     await new Promise((resolve) => {
       setTimeout(() => {
+        bars[index].style.backgroundColor = 'lightblue';
         dispatch({
-          type: BUBBLE_SORT,
+          type: HEAP_SORT,
           payload: [...array],
         });
         resolve(); // Resolve the Promise after changing the color
@@ -180,7 +233,7 @@ export const heapSort = (array) => async(dispatch) => {
   await new Promise((resolve) => {
     setTimeout(() => {
       dispatch({
-        type: BUBBLE_SORT,
+        type: HEAP_SORT,
         payload: [...array],
       });
       resolve(); // Resolve the Promise after changing the color
@@ -201,7 +254,7 @@ export const bubbleSort = (array) => async (dispatch) => {
     let temp;
     let swapped;
     let bars = document.getElementsByClassName('arrayIndex');
-    let delay = 25; // Initial delay in milliseconds
+    let delay = 1000 / (document.getElementById("Size").value * 5)
   
     for (let i = 0; i < array.length - 1; i++) {
       await new Promise((resolve) => {
@@ -258,8 +311,28 @@ export const bubbleSort = (array) => async (dispatch) => {
   
           swapped = true;
         }
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            bars[j].style.backgroundColor = 'lightblue';
+            bars[j+1].style.backgroundColor = 'lightblue';
+            dispatch({
+              type: BUBBLE_SORT,
+              payload: [...array],
+            });
+            resolve(); // Resolve the Promise after changing the color
+          }, delay);
+        });
       }
-  
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          bars[i].style.backgroundColor = 'lightblue';
+          dispatch({
+            type: BUBBLE_SORT,
+            payload: [...array],
+          });
+          resolve(); // Resolve the Promise after changing the color
+        }, delay);
+      });
       if (swapped === false) break;
   
       // Adjust the delay for the next iteration if needed
@@ -268,30 +341,184 @@ export const bubbleSort = (array) => async (dispatch) => {
   
 
   export const quickSort = (array, left, right) => async(dispatch) => {
+    let delay = 1000 / (document.getElementById("Size").value * 5)
+    let bars = document.getElementsByClassName('arrayIndex');
+
     if(left < right){
       let itemFromLeft = left, itemFromRight = right, k = left 
       let key = array[k]
-      console.log(key, itemFromLeft, itemFromRight)
+
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          bars[itemFromLeft].style.backgroundColor = 'green';
+          bars[itemFromRight].style.backgroundColor = 'green';
+          dispatch({
+            type: QUICK_SORT,
+            payload: [...array],
+          });
+          resolve(); // Resolve the Promise after changing the color
+        }, delay);
+      });
+
+
       while(itemFromLeft < itemFromRight){
         while(array[itemFromLeft] <= key && itemFromLeft < right){
-          console.log('1')
+
+          await new Promise((resolve) => {
+            setTimeout(() => {
+              console.log('1')
+              bars[itemFromLeft].style.backgroundColor = 'lightblue';
+              bars[itemFromLeft + 1].style.backgroundColor = 'green';
+              dispatch({
+                type: QUICK_SORT,
+                payload: [...array],
+              });
+              resolve(); // Resolve the Promise after changing the color
+            }, delay);
+          });
+
+
           itemFromLeft++
         }
         while(array[itemFromRight] > key && itemFromRight > left){
-          console.log('2')
+
+          await new Promise((resolve) => {
+            setTimeout(() => {
+              bars[itemFromRight].style.backgroundColor = 'lightblue';
+              bars[itemFromRight - 1].style.backgroundColor = 'green';
+              dispatch({
+                type: QUICK_SORT,
+                payload: [...array],
+              });
+              resolve(); // Resolve the Promise after changing the color
+            }, delay);
+          });
+
           itemFromRight--
         }
         if(itemFromLeft < itemFromRight){
-          console.log('3')
           dispatch(swap(array, itemFromLeft, itemFromRight))
+
+          await new Promise((resolve) => {
+            setTimeout(() => {
+              bars[itemFromLeft].style.backgroundColor = 'lightblue';
+              bars[itemFromRight].style.backgroundColor = 'lightblue';
+              dispatch({
+                type: QUICK_SORT,
+                payload: [...array],
+              });
+              resolve(); // Resolve the Promise after changing the color
+            }, delay);
+          });
         }
       } 
       dispatch(swap(array, left, itemFromRight))
+      console.log('2')
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          bars[left].style.backgroundColor = 'lightblue';
+          bars[itemFromRight].style.backgroundColor = 'lightblue';
+          bars[right].style.backgroundColor = 'lightblue';
+          dispatch({
+            type: QUICK_SORT,
+            payload: [...array],
+          });
+          resolve(); // Resolve the Promise after changing the color
+        }, delay);
+      });
+
       await dispatch(quickSort(array,left,itemFromRight-1))
       await dispatch(quickSort(array,itemFromRight+1,right))
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          bars[left].style.backgroundColor = 'lightblue';
+          bars[itemFromRight].style.backgroundColor = 'lightblue';
+          bars[right].style.backgroundColor = 'lightblue';
+          dispatch({
+            type: QUICK_SORT,
+            payload: [...array],
+          });
+          resolve(); // Resolve the Promise after changing the color
+        }, delay);
+      });
     }
-    dispatch({
-      type: QUICK_SORT,
-      payload: [...array],
-    });
   };
+
+
+  export function getMergeSortAnimations(array) {
+    const animations = [];
+    if (array.length <= 1) return array;
+    const auxiliaryArray = array.slice();
+    mergeSortHelper(array, 0, array.length - 1, auxiliaryArray, animations);
+    return animations;
+  }
+  
+  function mergeSortHelper(
+    mainArray,
+    startIdx,
+    endIdx,
+    auxiliaryArray,
+    animations,
+  ) {
+    if (startIdx === endIdx) return;
+    const middleIdx = Math.floor((startIdx + endIdx) / 2);
+    mergeSortHelper(auxiliaryArray, startIdx, middleIdx, mainArray, animations);
+    mergeSortHelper(auxiliaryArray, middleIdx + 1, endIdx, mainArray, animations);
+    doMerge(mainArray, startIdx, middleIdx, endIdx, auxiliaryArray, animations);
+  }
+  
+  function doMerge(
+    mainArray,
+    startIdx,
+    middleIdx,
+    endIdx,
+    auxiliaryArray,
+    animations,
+  ) {
+    let k = startIdx;
+    let i = startIdx;
+    let j = middleIdx + 1;
+    while (i <= middleIdx && j <= endIdx) {
+      // These are the values that we're comparing; we push them once
+      // to change their color.
+      animations.push([i, j]);
+      // These are the values that we're comparing; we push them a second
+      // time to revert their color.
+      animations.push([i, j]);
+      if (auxiliaryArray[i] <= auxiliaryArray[j]) {
+        // We overwrite the value at index k in the original array with the
+        // value at index i in the auxiliary array.
+        animations.push([k, auxiliaryArray[i]]);
+        mainArray[k++] = auxiliaryArray[i++];
+      } else {
+        // We overwrite the value at index k in the original array with the
+        // value at index j in the auxiliary array.
+        animations.push([k, auxiliaryArray[j]]);
+        mainArray[k++] = auxiliaryArray[j++];
+      }
+    }
+    while (i <= middleIdx) {
+      // These are the values that we're comparing; we push them once
+      // to change their color.
+      animations.push([i, i]);
+      // These are the values that we're comparing; we push them a second
+      // time to revert their color.
+      animations.push([i, i]);
+      // We overwrite the value at index k in the original array with the
+      // value at index i in the auxiliary array.
+      animations.push([k, auxiliaryArray[i]]);
+      mainArray[k++] = auxiliaryArray[i++];
+    }
+    while (j <= endIdx) {
+      // These are the values that we're comparing; we push them once
+      // to change their color.
+      animations.push([j, j]);
+      // These are the values that we're comparing; we push them a second
+      // time to revert their color.
+      animations.push([j, j]);
+      // We overwrite the value at index k in the original array with the
+      // value at index j in the auxiliary array.
+      animations.push([k, auxiliaryArray[j]]);
+      mainArray[k++] = auxiliaryArray[j++];
+    }
+  }

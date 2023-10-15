@@ -1,4 +1,4 @@
-import {BUBBLE_SORT, HEAP_SORT, REGERNATE_ARRAY, SWAP, QUICK_SORT} from '../actions/types'
+import {BUBBLE_SORT, HEAP_SORT, REGERNATE_ARRAY, SWAP, QUICK_SORT, MERGE_SORT} from '../actions/types'
 function generateRandomArray(){
     const size = 100
     let array = new Array(size)
@@ -26,6 +26,11 @@ export default function (state = initialState, action){
                 array:action.payload
             }
         case QUICK_SORT:
+            return{
+                ...state,
+                array:action.payload
+            }
+        case MERGE_SORT:
             return{
                 ...state,
                 array:action.payload

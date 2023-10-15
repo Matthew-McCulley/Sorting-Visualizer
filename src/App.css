@@ -38,6 +38,9 @@ button:hover{
   color: grey;
   cursor: pointer;
 }
+p, button{
+  font-size: 1em;
+}
 .selectedAlgorithm{
   color:lightblue;
 }
